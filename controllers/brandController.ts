@@ -73,3 +73,51 @@ export const getBrandById = async (req: Request, res: Response) => {
     }
   }
 };
+
+// Update a brand by ID
+export const updateBrand = async (req: Request, res: Response) => {
+  try {
+    const brand = await Brand.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!brand) {
+      res
+        .status(404)
+        .json({ success: false, message: "Brand not found." });
+    }
+    res.status(200).json({
+      success: true,
+      data: brand,
+      message: "Brand updated successfully.",
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(400).json({ success: false, message: error.message });
+    } else {
+      res.status(500).json({ success: false, message: "An unknown error occurred." });
+    }
+  }
+};
+
+// Delete a brand by ID
+export const deleteBrand = async (req: Request, res: Response) => {
+  try {
+    const brand = await Brand.findByIdAndDelete(req.params.id);
+    if (!brand) {
+      res
+        .status(404)
+        .json({ success: false, message: "Brand not found." });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Brand deleted successfully.",
+    });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ success: false, message: error.message });
+    } else {
+      res.status(500).json({ success: false, message: "An unknown error occurred." });
+    }
+  }
+};
