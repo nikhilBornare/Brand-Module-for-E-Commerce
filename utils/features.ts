@@ -12,32 +12,41 @@ interface QueryFeatures {
 const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) => {
     const { search, rating, sort, page = 1, limit = 10 } = queryFeatures;
 
+    console.log('Query Features:', queryFeatures);
+
     const query: any = {};
     if (search) {
-        query.name = { $regex: search, $options: "i" }; // Search by name
+        query.name = { $regex: search, $options: "i" }; 
     }
 
     if (rating) {
         query.rating = { $gte: parseFloat(rating) }; // Filter by rating greater than or equal to the provided value
     }
 
-    const options: any = {};
+    let sortOption: any = {};
     if (sort) {
         if (sort === "name") {
-            options.sort = { name: 1 }; // Sort alphabetically by name
+            sortOption = { name: 1 }; // Sort alphabetically by name (ascending)
         } else {
-            options.sort = { [sort as string]: 1 }; // Sort dynamically by other fields
+            sortOption = { [sort]: 1 }; 
         }
     }
 
-    const brands = await Brand.find(query).limit(Number(limit)).skip((Number(page) - 1) * Number(limit)).sort(options.sort || {});
+    console.log('Sort Option:', sortOption);
+
+    const brands = await Brand.find(query)
+        .limit(Number(limit)) 
+        .skip((Number(page) - 1) * Number(limit)) 
+        .sort(sortOption); 
 
     return {
         brands,
-        total: await Brand.countDocuments(query),
+        total: await Brand.countDocuments(query), // Count the total number of matching brands
         page: Number(page),
         limit: Number(limit),
     };
 };
+
+
 
 export default getFilteredSortedPaginatedBrands;

@@ -10,7 +10,7 @@ export interface IBrand extends Document {
     foundedYear: number;
     status: string;
     availableLocation: string;
-    totalProduct: number;
+    totalProduct: number; 
     rating: number;
     createdAt: Date;
     updatedAt: Date;
