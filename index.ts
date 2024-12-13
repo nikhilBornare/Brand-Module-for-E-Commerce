@@ -1,21 +1,19 @@
-import express, { Request, Response } from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db';
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db";
+import brandRoutes from "./routes/brandRoutes";
 
 dotenv.config();
-const app = express();
-
-// Middleware
-app.use(express.json());
-
-// Connect to Database
 connectDB();
 
-// Basic Route
-app.get('/', (req: Request, res: Response) => {
-  res.send('API is running...');
-});
+const app = express();
+app.use(express.json());
 
-// Start the Server
+// Use the brand routes
+app.use("/api/brands", brandRoutes);
+
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
