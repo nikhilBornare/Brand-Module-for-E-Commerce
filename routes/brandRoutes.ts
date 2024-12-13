@@ -9,19 +9,19 @@ import {
 
 const router = express.Router();
 
-// Route to create a brand
+// Post route to create a brand
 router.post("/", createBrand);
 
-// Route to get all brands
+// Get route to get all brands
 router.get("/", getAllBrands);
 
-// Route to get a single brand by ID
+// Get route to get a single brand by ID
 router.get("/:id", getBrandById);
 
-// Route to update a brand by ID
+// Put route to update a brand by ID
 router.put("/:id", updateBrand);
 
-// Route to delete a brand by ID
+// Delete route to delete a brand by ID
 router.delete("/:id", deleteBrand);
 
 export default router;
