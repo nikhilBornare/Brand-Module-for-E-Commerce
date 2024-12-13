@@ -3,7 +3,7 @@ import Brand from "../models/brandModel";
 
 interface QueryFeatures {
     search?: string;
-    rating?: string; // New field for filtering by rating
+    rating?: string;
     sort?: string;
     page?: number;
     limit?: number;
@@ -30,10 +30,7 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
         }
     }
 
-    const brands = await Brand.find(query)
-        .limit(Number(limit))
-        .skip((Number(page) - 1) * Number(limit))
-        .sort(options.sort || {});
+    const brands = await Brand.find(query).limit(Number(limit)).skip((Number(page) - 1) * Number(limit)).sort(options.sort || {});
 
     return {
         brands,
