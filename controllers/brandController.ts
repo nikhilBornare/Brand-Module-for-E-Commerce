@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Brand from "../models/brandModel";
+import getFilteredSortedPaginatedBrands from "../utils/features"; // Import the utility
 
 // Create a new brand
 export const createBrand = async (req: Request, res: Response) => {
@@ -22,29 +23,21 @@ export const createBrand = async (req: Request, res: Response) => {
 // Get all brands with filtering, sorting, pagination
 export const getAllBrands = async (req: Request, res: Response) => {
   try {
-    const { search, sort, page = 1, limit = 10 } = req.query;
+    const queryFeatures = {
+      search: req.query.search as string,
+      sort: req.query.sort as string,
+      page: parseInt(req.query.page as string, 10),
+      limit: parseInt(req.query.limit as string, 10),
+    };
 
-    const query: any = {};
-    if (search) {
-      query.name = { $regex: search, $options: "i" }; // Search by name
-    }
-
-    const options: any = {};
-    if (sort) {
-      options.sort = { [sort as string]: 1 }; // Sort dynamically by field
-    }
-
-    const brands = await Brand.find(query)
-      .limit(Number(limit))
-      .skip((Number(page) - 1) * Number(limit))
-      .sort(options.sort || {});
+    const { brands, total, page, limit } = await getFilteredSortedPaginatedBrands(queryFeatures);
 
     res.status(200).json({
       success: true,
       data: brands,
-      total: await Brand.countDocuments(query),
-      page: Number(page),
-      limit: Number(limit),
+      total,
+      page,
+      limit,
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
