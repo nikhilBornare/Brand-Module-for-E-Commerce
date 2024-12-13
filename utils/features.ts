@@ -3,22 +3,26 @@ import Brand from "../models/brandModel";
 
 interface QueryFeatures {
     search?: string;
+    rating?: string; // New field for filtering by rating
     sort?: string;
     page?: number;
     limit?: number;
 }
 
 const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) => {
-    const { search, sort, page = 1, limit = 10 } = queryFeatures;
+    const { search, rating, sort, page = 1, limit = 10 } = queryFeatures;
 
     const query: any = {};
     if (search) {
         query.name = { $regex: search, $options: "i" }; // Search by name
     }
 
+    if (rating) {
+        query.rating = { $gte: parseFloat(rating) }; // Filter by rating greater than or equal to the provided value
+    }
+
     const options: any = {};
     if (sort) {
-        // Sorting logic
         if (sort === "name") {
             options.sort = { name: 1 }; // Sort alphabetically by name
         } else {
