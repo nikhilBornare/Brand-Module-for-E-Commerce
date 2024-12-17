@@ -16,7 +16,7 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
 
     const query: any = {};
     if (search) {
-        query.name = { $regex: search, $options: "i" }; 
+        query.name = { $regex: search, $options: "i" };
     }
 
     if (rating) {
@@ -27,21 +27,19 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
     if (sort) {
         if (sort === "name") {
             sortOption = { name: 1 }; // Sort alphabetically by name (ascending)
-        } else {
-            sortOption = { [sort]: 1 }; 
         }
     }
 
     console.log('Sort Option:', sortOption);
 
     const brands = await Brand.find(query)
-        .limit(Number(limit)) 
-        .skip((Number(page) - 1) * Number(limit)) 
-        .sort(sortOption); 
+        .limit(Number(limit))
+        .skip((Number(page) - 1) * Number(limit))
+        .sort(sortOption);
 
     return {
         brands,
-        total: await Brand.countDocuments(query), // Count the total number of matching brands
+        total: await Brand.countDocuments(query), 
         page: Number(page),
         limit: Number(limit),
     };
