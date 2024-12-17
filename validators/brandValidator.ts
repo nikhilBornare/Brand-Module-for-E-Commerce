@@ -8,14 +8,12 @@ export const brandValidationRules = [
         .withMessage("Name must be a string"),
 
     body("description")
-        .notEmpty()
-        .withMessage("Description is required")
+        .optional()
         .isString()
         .withMessage("Description must be a string"),
 
     body("website")
-        .notEmpty()
-        .withMessage("Website is required")
+        .optional()
         .isURL()
         .withMessage("Website must be a valid URL"),
 
@@ -26,8 +24,7 @@ export const brandValidationRules = [
         .withMessage("Email must be a valid email address"),
 
     body("country")
-        .notEmpty()
-        .withMessage("Country is required")
+        .optional()
         .isString()
         .withMessage("Country must be a string"),
 
@@ -44,14 +41,12 @@ export const brandValidationRules = [
         .withMessage("Status must be either 'Active' or 'Inactive'"),
 
     body("availableLocation")
-        .notEmpty()
-        .withMessage("Available Location is required")
+        .optional()
         .isString()
         .withMessage("Available Location must be a string"),
 
     body("totalProduct")
-        .notEmpty()
-        .withMessage("Total Product is required")
+        .optional()
         .isInt({ min: 0 })
         .withMessage("Total Product must be a non-negative integer"),
 

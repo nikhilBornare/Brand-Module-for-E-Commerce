@@ -12,7 +12,20 @@ export const createBrand = async (req: Request, res: Response, next: NextFunctio
       data: brand,
       message: "Brand created successfully.",
     });
-  } catch (error) {
+  } catch (error: any) {
+    // Handle MongoDB Duplicate Key Error (E11000)
+    if (error.code === 11000) {
+      const duplicateKey = Object.keys(error.keyValue)[0];
+      const duplicateValue = error.keyValue[duplicateKey];
+      return next(
+        new ApplicationError(
+          `The ${duplicateKey} "${duplicateValue}" already exists. Please use a different name.`,
+          400
+        )
+      );
+    }
+
+    // Pass other errors to the global error handler
     next(new ApplicationError((error as Error).message, 400));
   }
 };

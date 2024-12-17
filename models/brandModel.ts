@@ -26,11 +26,11 @@ const brandSchema: Schema = new Schema(
         },
         description: {
             type: String,
-            required: true
+            required: false
         },
         website: {
             type: String,
-            required: true
+            required: false
         },
         email: {
             type: String,
@@ -38,7 +38,7 @@ const brandSchema: Schema = new Schema(
         },
         country: {
             type: String,
-            required: true
+            required: false
         },
         foundedYear: {
             type: Number,
@@ -50,11 +50,11 @@ const brandSchema: Schema = new Schema(
         },
         availableLocation: {
             type: String,
-            required: true
+            required: false
         },
         totalProduct: {
             type: Number,
-            required: true
+            required: false
         },
         rating: {
             type: Number,
