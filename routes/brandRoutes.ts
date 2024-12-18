@@ -21,22 +21,22 @@ const validateObjectId = (req: express.Request, res: express.Response, next: exp
       message: "Invalid ID format.",
     });
   }
-  next(); // Continue to the next middleware or route handler
+  next(); 
 };
 
-// Post route to create a brand with validation
+
 router.post("/", brandValidationRules, validateRequest, createBrand);
 
-// Get route to get all brands
+
 router.get("/", getAllBrands);
 
-// Get route to get a single brand by ID
+
 router.get("/:id", validateObjectId, getBrandById);
 
-// Put route to update a brand by ID with validation
+
 router.put("/:id", validateObjectId, brandValidationRules, validateRequest, updateBrand);
 
-// Delete route to delete a brand by ID
+
 router.delete("/:id", validateObjectId, deleteBrand);
 
 export default router;

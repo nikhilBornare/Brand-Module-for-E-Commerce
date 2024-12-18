@@ -2,7 +2,7 @@ import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import Brand from "../models/brandModel";
 
-// Custom validator for unique 'name' field
+
 const checkUniqueName = async (value: string) => {
     const existingBrand = await Brand.findOne({ name: value });
     if (existingBrand) {

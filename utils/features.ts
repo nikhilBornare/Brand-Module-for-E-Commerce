@@ -16,11 +16,11 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
 
     const query: any = {};
     if (search) {
-        query.name = { $regex: search, $options: "i" };
+        query.name = { $regex: search, $options: "i" }; 
     }
 
     if (rating) {
-        query.rating = { $gte: parseFloat(rating) }; // Filter by rating greater than or equal to the provided value
+        query.rating = { $gte: parseFloat(rating) }; 
     }
 
     let sortOption: any = {};

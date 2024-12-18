@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-// Define the Brand interface
+
 export interface IBrand extends Document {
     name: string;
     description: string;
@@ -10,13 +10,13 @@ export interface IBrand extends Document {
     foundedYear: number;
     status: string;
     availableLocation: string;
-    totalProduct: number; 
+    totalProduct: number;
     rating: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-// Define the Brand schema
+
 const brandSchema: Schema = new Schema(
     {
         name: {
@@ -64,7 +64,7 @@ const brandSchema: Schema = new Schema(
         },
     },
     {
-        timestamps: true, // Automatically adds createdAt and updatedAt fields
+        timestamps: true,
     }
 );
 
