@@ -78,16 +78,16 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // Error handler middleware for duplicate key errors
-export const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
-    if (err && err.code === 11000) { // MongoDB duplicate key error
-        const field = Object.keys(err.keyPattern)[0];
-        return res.status(400).json({
-            success: false,
-            error: {
-                message: `${field.charAt(0).toUpperCase() + field.slice(1)} must be unique. The value '${err.keyValue[field]}' is already in use.`,
-                statusCode: 400,
-            },
-        });
-    }
-    next(err); // Pass other errors to the default error handler
-};
+// export const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+//     if (err && err.code === 11000) { // MongoDB duplicate key error
+//         const field = Object.keys(err.keyPattern)[0];
+//         return res.status(400).json({
+//             success: false,
+//             error: {
+//                 message: `${field.charAt(0).toUpperCase() + field.slice(1)} must be unique. The value '${err.keyValue[field]}' is already in use.`,
+//                 statusCode: 400,
+//             },
+//         });
+//     }
+//     next(err); // Pass other errors to the default error handler
+// };
