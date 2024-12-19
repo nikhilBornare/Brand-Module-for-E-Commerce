@@ -10,38 +10,39 @@ const checkUniqueName = async (value: string) => {
     }
 };
 
+
+function specialCondition(): any {
+    const alpha = /[^A-Za-z0-9]/
+    if (alpha) return;
+}
+
+
 export const brandValidationRules = [
     body("name")
-        .notEmpty()
-        .withMessage("Name is required")
-        .isString()
-        .withMessage("Name must be a string")
-        .custom(checkUniqueName), // Add unique check
+        .trim()
+        .notEmpty().withMessage("Name is required")
+        .isString().withMessage("Name must be a string")
+        .custom(checkUniqueName)
+        .custom(specialCondition()).withMessage("Special characters are not allowed"),
 
     body("description")
         .optional()
-        .isString()
-        .withMessage("Description must be a string"),
+        .isString().withMessage("Description must be a string"),
 
     body("website")
         .optional()
-        .isURL()
-        .withMessage("Website must be a valid URL"),
+        .isURL().withMessage("Website must be a valid URL"),
 
     body("email")
-        .notEmpty()
-        .withMessage("Email is required")
-        .isEmail()
-        .withMessage("Email must be a valid email address"),
+        .notEmpty().withMessage("Email is required")
+        .isEmail().withMessage("Email must be a valid email address"),
 
     body("country")
         .optional()
-        .isString()
-        .withMessage("Country must be a string"),
+        .isString().withMessage("Country must be a string"),
 
     body("foundedYear")
-        .notEmpty()
-        .withMessage("Founded Year is required")
+        .notEmpty().withMessage("Founded Year is required")
         .isInt({ min: 1800, max: new Date().getFullYear() })
         .withMessage(`Founded Year must be a valid year between 1800 and ${new Date().getFullYear()}`),
 
@@ -77,17 +78,4 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
     next();
 };
 
-// Error handler middleware for duplicate key errors
-// export const errorHandlerMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
-//     if (err && err.code === 11000) { // MongoDB duplicate key error
-//         const field = Object.keys(err.keyPattern)[0];
-//         return res.status(400).json({
-//             success: false,
-//             error: {
-//                 message: `${field.charAt(0).toUpperCase() + field.slice(1)} must be unique. The value '${err.keyValue[field]}' is already in use.`,
-//                 statusCode: 400,
-//             },
-//         });
-//     }
-//     next(err); // Pass other errors to the default error handler
-// };
+

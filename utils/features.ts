@@ -27,6 +27,10 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
     if (sort) {
         if (sort === "name") {
             sortOption = { name: 1 }; // Sort alphabetically by name (ascending)
+        } else if (sort === "createdAt"){
+            sortOption = {createdAt:-1};
+        } else if (sort === "updatedAt"){
+            sortOption = {updatedAt:-1}
         }
     }
 
