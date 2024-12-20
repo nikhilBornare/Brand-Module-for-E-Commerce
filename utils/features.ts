@@ -1,4 +1,3 @@
-import { Request, Response } from "express";
 import Brand from "../models/brandModel";
 
 interface QueryFeatures {
@@ -25,16 +24,15 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
     // sort
     let sortOption = {};
 
-    // Map the sort options to their corresponding sorting criteria
     const sortOptionsMap = {
-        name: { name: 1 },              
+        name: { name: 1 },     
+        nameDesc: { name: -1 },          
         createdAtAsc: { createdAt: 1 }, 
         updatedAtAsc: { updatedAt: 1 }, 
         createdAtDesc: { createdAt: -1 }, 
         updatedAtDesc: { updatedAt: -1 }
     };
 
-    // Check if the 'sort' value matches any key in the map and set the sortOption
     if (sort) {
         sortOption = sortOptionsMap[sort];
     }
