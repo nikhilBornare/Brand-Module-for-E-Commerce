@@ -18,7 +18,7 @@ export const brandValidationRules = [
         .isString().withMessage("Name must be a string")
         .custom(checkUniqueName)
         .custom((value) => {
-            const specialCharacters = /^[A-Za-z0-9]*$/;
+            const specialCharacters = /^[A-Za-z0-9\s]*$/;
             if (!specialCharacters.test(value)) {
                 throw new Error("Special characters are not allowed");
             }
