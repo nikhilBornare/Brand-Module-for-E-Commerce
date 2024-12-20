@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-
 export interface IBrand extends Document {
     name: string;
     description: string;
@@ -15,7 +14,6 @@ export interface IBrand extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
-
 
 const brandSchema: Schema = new Schema(
     {

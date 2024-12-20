@@ -13,11 +13,9 @@ export const createBrand = async (req: Request, res: Response, next: NextFunctio
       message: "Brand created successfully.",
     });
   } catch (error: any) {
-  
     next(new ApplicationError((error as Error).message, 400));
   }
 };
-
 export const getAllBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const queryFeatures = {
@@ -73,7 +71,7 @@ export const updateBrand = async (req: Request, res: Response, next: NextFunctio
   } catch (error) {
     next(new ApplicationError((error as Error).message, 400));
   }
-};
+};  
 
 
 export const deleteBrand = async (req: Request, res: Response, next: NextFunction) => {

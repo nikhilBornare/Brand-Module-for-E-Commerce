@@ -1,20 +1,21 @@
-import { body, validationResult } from "express-validator";
+import { body, validationResult,CustomValidator } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import Brand from "../models/brandModel";
 
 
-const checkUniqueName = async (value: string) => {
-    const existingBrand = await Brand.findOne({ name: value });
+const checkUniqueName: CustomValidator = async (value: string, { req }) => {
+    const id = req.params?.id;  
+    const existingBrand = await Brand.findOne({ name: value, _id: { $ne: id } });
     if (existingBrand) {
         throw new Error("Name must be unique. This name is already in use.");
     }
 };
 
 
-function specialCondition(): any {
-    const alpha = /[^A-Za-z0-9]/
-    if (alpha) return;
-}
+// function specialCondition(): any {
+//     const alpha = /[^A-Za-z0-9]/
+//     if (alpha) return;
+// }
 
 
 export const brandValidationRules = [
@@ -23,7 +24,13 @@ export const brandValidationRules = [
         .notEmpty().withMessage("Name is required")
         .isString().withMessage("Name must be a string")
         .custom(checkUniqueName)
-        .custom(specialCondition()).withMessage("Special characters are not allowed"),
+        .custom((value) => {
+            const specialCharacters = /^[A-Za-z0-9]*$/;
+            if (!specialCharacters.test(value)) {
+                throw new Error("Special characters are not allowed");
+            }
+            return true;
+        }),
 
     body("description")
         .optional()
@@ -67,7 +74,7 @@ export const brandValidationRules = [
         .withMessage("Rating is required")
         .isFloat({ min: 0, max: 5 })
         .withMessage("Rating must be a number between 0 and 5"),
-];
+];  
 
 // Middleware to validate results
 export const validate = (req: Request, res: Response, next: NextFunction) => {
@@ -77,5 +84,4 @@ export const validate = (req: Request, res: Response, next: NextFunction) => {
     }
     next();
 };
-
 
