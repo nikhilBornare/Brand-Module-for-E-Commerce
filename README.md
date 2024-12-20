@@ -14,6 +14,7 @@ This repository provides a **Brand Module** for an e-commerce application, enabl
 
 3. **Sorting**
    - Sort brands alphabetically by their names.
+   - Sort brands by createdAt & updatedAt.
 
 4. **Filtering**
    - Filter brands based on their ratings.
