@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import Brand from "../models/brandModel";
 
 interface QueryFeatures {
-    search?: string;    
+    search?: string;
     rating?: string;
-    sort?: string;
+    sort?: "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc";
     page?: number;
     limit?: number;
 }
@@ -16,29 +16,31 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
 
     const query: any = {};
     if (search) {
-        query.name = { $regex: search, $options: "i" }; 
+        query.name = { $regex: search, $options: "i" };
     }
-
+    // rating
     if (rating) {
-        query.rating = { $gte: parseFloat(rating) }; 
+        query.rating = { $gte: parseFloat(rating) };
     }
+    // sort
+    let sortOption = {};
 
-    let sortOption: any = {};
+    // Map the sort options to their corresponding sorting criteria
+    const sortOptionsMap = {
+        name: { name: 1 },              
+        createdAtAsc: { createdAt: 1 }, 
+        updatedAtAsc: { updatedAt: 1 }, 
+        createdAtDesc: { createdAt: -1 }, 
+        updatedAtDesc: { updatedAt: -1 }
+    };
+
+    // Check if the 'sort' value matches any key in the map and set the sortOption
     if (sort) {
-        if (sort === "name") {
-            sortOption = { name: 1 }; // Sort alphabetically by name (ascending)
-        } else if (sort === "createdAt"){
-            sortOption = {createdAt:1};
-        } else if (sort === "updatedAt"){
-            sortOption = {updatedAt:1}
-        } else if (sort === "createdAt"){
-            sortOption = {createdAt:-1};
-        } else if (sort === "updatedAt"){
-            sortOption = {updatedAt:-1}
-        }
+        sortOption = sortOptionsMap[sort];
     }
 
-    console.log('Sort Option:', sortOption);
+    console.log(sortOption);  
+
 
     const brands = await Brand.find(query)
         .limit(Number(limit))
@@ -47,7 +49,7 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
 
     return {
         brands,
-        total: await Brand.countDocuments(query), 
+        total: await Brand.countDocuments(query),
         page: Number(page),
         limit: Number(limit),
     };

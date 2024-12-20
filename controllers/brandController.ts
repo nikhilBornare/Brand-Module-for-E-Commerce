@@ -3,7 +3,7 @@ import Brand from "../models/brandModel";
 import getFilteredSortedPaginatedBrands from "../utils/features";
 import { ApplicationError } from "../error-handler/applicationError";
 
-
+// createBrand
 export const createBrand = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const brand = await Brand.create(req.body);
@@ -16,12 +16,13 @@ export const createBrand = async (req: Request, res: Response, next: NextFunctio
     next(new ApplicationError((error as Error).message, 400));
   }
 };
+// getAllBrands
 export const getAllBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const queryFeatures = {
       search: req.query.search as string,
       rating: req.query.rating as string,
-      sort: req.query.sort as string,
+      sort: req.query.sort as "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc",
       page: parseInt(req.query.page as string, 10),
       limit: parseInt(req.query.limit as string, 10),
     };
@@ -40,7 +41,7 @@ export const getAllBrands = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-
+// getBrandById
 export const getBrandById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const brand = await Brand.findById(req.params.id);
@@ -53,7 +54,7 @@ export const getBrandById = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-
+// updateBrand
 export const updateBrand = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const brand = await Brand.findByIdAndUpdate(req.params.id, req.body, {
@@ -73,7 +74,7 @@ export const updateBrand = async (req: Request, res: Response, next: NextFunctio
   }
 };  
 
-
+// deleteBrand
 export const deleteBrand = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const brand = await Brand.findByIdAndDelete(req.params.id);

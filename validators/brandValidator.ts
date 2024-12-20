@@ -1,22 +1,15 @@
-import { body, validationResult,CustomValidator } from "express-validator";
+import { body, validationResult, CustomValidator } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 import Brand from "../models/brandModel";
 
 
 const checkUniqueName: CustomValidator = async (value: string, { req }) => {
-    const id = req.params?.id;  
+    const id = req.params?.id;
     const existingBrand = await Brand.findOne({ name: value, _id: { $ne: id } });
     if (existingBrand) {
         throw new Error("Name must be unique. This name is already in use.");
     }
 };
-
-
-// function specialCondition(): any {
-//     const alpha = /[^A-Za-z0-9]/
-//     if (alpha) return;
-// }
-
 
 export const brandValidationRules = [
     body("name")
@@ -74,7 +67,7 @@ export const brandValidationRules = [
         .withMessage("Rating is required")
         .isFloat({ min: 0, max: 5 })
         .withMessage("Rating must be a number between 0 and 5"),
-];  
+];
 
 // Middleware to validate results
 export const validate = (req: Request, res: Response, next: NextFunction) => {
