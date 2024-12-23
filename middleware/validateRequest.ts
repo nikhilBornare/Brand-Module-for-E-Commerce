@@ -5,16 +5,10 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        const formattedErrors = errors.array().map((err: any) => {
-            // Used specific field names 
-            const field = err.param || err.location ;
-            const message = err.msg || "Unknown error";
-
-            return {
-                field: field,
-                message: message
-            };
-        });
+        const formattedErrors = errors.array().map((err: any) => ({
+            field: err.param, 
+            message: err.msg || "Unknown error"
+        }));
 
          res.status(400).json({
             success: false,
@@ -25,6 +19,5 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
             }
         });
     }
-
     return;
 };
