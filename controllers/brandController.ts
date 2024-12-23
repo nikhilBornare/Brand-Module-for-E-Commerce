@@ -22,7 +22,7 @@ export const getAllBrands = async (req: Request, res: Response, next: NextFuncti
     const queryFeatures = {
       search: req.query.search as string,
       rating: req.query.rating as string,
-      sort: req.query.sort as "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc",
+      sort: req.query.sort as "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc" | "status" | "statusDesc",
       page: parseInt(req.query.page as string, 10),
       limit: parseInt(req.query.limit as string, 10),
     };

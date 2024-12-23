@@ -3,10 +3,11 @@ import Brand from "../models/brandModel";
 interface QueryFeatures {
     search?: string;
     rating?: string;
-    sort?: "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc";
+    sort?: "name" | "createdAtAsc" | "updatedAtAsc" | "createdAtDesc" | "updatedAtDesc" | "status" | "statusDesc";
     page?: number;
     limit?: number;
 }
+
 
 const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) => {
     const { search, rating, sort, page = 1, limit = 10 } = queryFeatures;
@@ -21,7 +22,8 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
     if (rating) {
         query.rating = { $gte: parseFloat(rating) };
     }
-    // sort
+    
+    
     let sortOption = {};
 
     const sortOptionsMap = {
@@ -30,15 +32,16 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
         createdAtAsc: { createdAt: 1 }, 
         updatedAtAsc: { updatedAt: 1 }, 
         createdAtDesc: { createdAt: -1 }, 
-        updatedAtDesc: { updatedAt: -1 }
+        updatedAtDesc: { updatedAt: -1 },
+        status: { status: 1 }, 
+        statusDesc: { status: -1 } 
     };
 
     if (sort) {
-        sortOption = sortOptionsMap[sort];
+        sortOption = sortOptionsMap[sort] || {};
     }
 
-    console.log(sortOption);  
-
+    console.log(sortOption);
 
     const brands = await Brand.find(query)
         .limit(Number(limit))
@@ -52,7 +55,6 @@ const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) =>
         limit: Number(limit),
     };
 };
-
 
 
 export default getFilteredSortedPaginatedBrands;
