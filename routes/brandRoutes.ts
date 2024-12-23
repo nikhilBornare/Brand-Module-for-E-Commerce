@@ -25,7 +25,7 @@ const validateObjectId = (req: express.Request, res: express.Response, next: exp
 };
 
 
-router.post("/", brandValidationRules, validateRequest, createBrand);
+router.post("/", brandValidationRules,validateRequest, createBrand);
 
 
 router.get("/", getAllBrands);
