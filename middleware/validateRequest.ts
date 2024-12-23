@@ -6,7 +6,7 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
 
     if (!errors.isEmpty()) {
         const formattedErrors = errors.array().map((err: any) => {
-            // Extract specific field names from 'param' or 'location'
+            // Used specific field names 
             const field = err.param || err.location ;
             const message = err.msg || "Unknown error";
 
