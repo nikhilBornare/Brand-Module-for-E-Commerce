@@ -3,11 +3,15 @@ import { Request, Response, NextFunction } from "express";
 // Custom Error Class
 export class ApplicationError extends Error {
     statusCode: number;
-    constructor(message: string, statusCode: number) {
-        super(message);
+    details?: object[];  //separate property to hold non-string error details
+
+    constructor(message: string, statusCode: number, details?: object[]) {
+        super(message); 
         this.statusCode = statusCode;
+        this.details = details;
     }
 }
+
 // Error Handling Middleware
 export const errorHandler = (
     err: ApplicationError,
@@ -17,13 +21,11 @@ export const errorHandler = (
 ) => {
     const statusCode = err.statusCode || 500;
 
-    const message = err.message || "Internal Server Error";
-
-    // Send an error response
     res.status(statusCode).json({
         success: false,
         error: {
-            message: message,
+            message: err.message, 
+            details: err.details || null, 
             statusCode: statusCode,
         },
     });
