@@ -1,72 +1,68 @@
-import { body, validationResult, CustomValidator } from "express-validator";
-import { Request, Response, NextFunction } from "express";
-import Brand from "../models/brandModel";
+import Joi from "joi";
 
-
-const checkUniqueName: CustomValidator = async (value: string, { req }) => {
-    const id = req.params?.id;
-    const existingBrand = await Brand.findOne({ name: value, _id: { $ne: id } });
-    if (existingBrand) {
-        throw new Error("Name must be unique. This name is already in use.");
-    }
-};
-
-export const brandValidationRules = [
-    body("name")
+// Define validation schema
+export const brandSchema = Joi.object({
+    name: Joi.string()
         .trim()
-        .notEmpty().withMessage("Name is required")
-        .isString().withMessage("Name must be a string")
-        .custom(checkUniqueName)
-        .custom((value) => {
-            const specialCharacters = /^[A-Za-z0-9\s]*$/;
-            if (!specialCharacters.test(value)) {
-                throw new Error("Special characters are not allowed");
-            }
-            return true;
+        .pattern(/^[A-Za-z0-9\s]*$/)
+        .required()
+        .messages({
+            "string.empty": "Name is required",
+            "string.pattern.base": "Special characters are not allowed",
         }),
 
-    body("description")
-        .optional()
-        .isString().withMessage("Description must be a string"),
+    description: Joi.string().optional().messages({
+        "string.base": "Description must be a string",
+    }),
 
-    body("website")
-        .optional()
-        .isURL().withMessage("Website must be a valid URL"),
+    website: Joi.string().uri().optional().messages({
+        "string.uri": "Website must be a valid URL",
+    }),
 
-    body("email")
-        .notEmpty().withMessage("Email is required")
-        .isEmail().withMessage("Email must be a valid email address"),
+    email: Joi.string().email().required().messages({
+        "string.empty": "Email is required",
+        "string.email": "Email must be a valid email address",
+    }),
 
-    body("country")
-        .optional()
-        .isString().withMessage("Country must be a string"),
+    country: Joi.string().optional().messages({
+        "string.base": "Country must be a string",
+    }),
 
-    body("foundedYear")
-        .notEmpty().withMessage("Founded Year is required")
-        .isInt({ min: 1800, max: new Date().getFullYear() })
-        .withMessage(`Founded Year must be a valid year between 1800 and ${new Date().getFullYear()}`),
+    foundedYear: Joi.number()
+        .integer()
+        .min(1800)
+        .max(new Date().getFullYear())
+        .required()
+        .messages({
+            "number.base": "Founded Year must be a valid number",
+            "number.min": `Founded Year must be a valid year between 1800 and ${new Date().getFullYear()}`,
+            "number.max": `Founded Year must be a valid year between 1800 and ${new Date().getFullYear()}`,
+        }),
 
-    body("status")
-        .notEmpty()
-        .withMessage("Status is required")
-        .isIn(["Active", "Inactive"])
-        .withMessage("Status must be either 'Active' or 'Inactive'"),
+    status: Joi.string()
+        .valid("Active", "Inactive")
+        .required()
+        .messages({
+            "any.only": "Status must be either 'Active' or 'Inactive'",
+            "string.empty": "Status is required",
+        }),
 
-    body("availableLocation")
-        .optional()
-        .isString()
-        .withMessage("Available Location must be a string"),
+    availableLocation: Joi.string().optional().messages({
+        "string.base": "Available Location must be a string",
+    }),
 
-    body("totalProduct")
-        .optional()
-        .isInt({ min: 0 })
-        .withMessage("Total Product must be a non-negative integer"),
+    totalProduct: Joi.number().integer().min(0).optional().messages({
+        "number.base": "Total Product must be a non-negative integer",
+    }),
 
-    body("rating")
-        .notEmpty()
-        .withMessage("Rating is required")
-        .isFloat({ min: 0, max: 5 })
-        .withMessage("Rating must be a number between 0 and 5"),
-];
-
-
+    rating: Joi.number()
+        .min(0)
+        .max(5)
+        .required()
+        .messages({
+            "number.base": "Rating must be a number between 0 and 5",
+            "number.min": "Rating must be a number between 0 and 5",
+            "number.max": "Rating must be a number between 0 and 5",
+            "any.required": "Rating is required",
+        }),
+});

@@ -7,8 +7,7 @@ import {
   updateBrand,
   deleteBrand,
 } from "../controllers/brandController";
-import { brandValidationRules } from "../validators/brandValidator";
-import { validateRequest } from "../middleware/validateRequest";
+import { validateRequest, checkUniqueName } from "../middleware/validateRequest";
 
 const router = express.Router();
 
@@ -21,21 +20,17 @@ const validateObjectId = (req: express.Request, res: express.Response, next: exp
       message: "Invalid ID format.",
     });
   }
-  next(); 
+  next();
 };
 
-
-router.post("/", brandValidationRules,validateRequest, createBrand);
-
+// Routes
+router.post("/", checkUniqueName, validateRequest, createBrand); 
 
 router.get("/", getAllBrands);
 
-
 router.get("/:id", validateObjectId, getBrandById);
 
-
-router.put("/:id", validateObjectId, brandValidationRules, validateRequest, updateBrand);
-
+router.put("/:id", validateObjectId, checkUniqueName, validateRequest, updateBrand); 
 
 router.delete("/:id", validateObjectId, deleteBrand);
 
