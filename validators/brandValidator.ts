@@ -12,7 +12,7 @@ export const brandSchema = Joi.object({
         }),
 
     description: Joi.string().optional().messages({
-        "string.base": "Description must be a string",
+        "string.base": "Description must be a string",  
     }),
 
     website: Joi.string().uri().optional().messages({
