@@ -6,6 +6,7 @@ import {
   getBrandById,
   updateBrand,
   deleteBrand,
+  deleteMultipleBrands,
 } from "../controllers/brandController";
 import { validateRequest, checkUniqueName } from "../middleware/validateRequest";
 
@@ -33,5 +34,7 @@ router.get("/:id", validateObjectId, getBrandById);
 router.put("/:id", validateObjectId, checkUniqueName, validateRequest, updateBrand); 
 
 router.delete("/:id", validateObjectId, deleteBrand);
+
+router.delete("/",validateObjectId,deleteMultipleBrands);
 
 export default router;

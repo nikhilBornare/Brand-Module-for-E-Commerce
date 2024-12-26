@@ -90,3 +90,25 @@ export const deleteBrand = async (req: Request, res: Response, next: NextFunctio
     next(new ApplicationError((error as Error).message, 500));
   }
 };
+
+// deleteMultipleBrands
+export const deleteMultipleBrands = async (req: Request , res: Response , next: NextFunction) => {
+  try {
+    const {ids} = req.body;
+
+    if(!Array.isArray(ids) || ids.length ===0){
+      return next(new ApplicationError("Invalid or empty array of IDs provided",400));
+    }
+    const result = await Brand.deleteMany({_id:{$in:ids}});
+
+    if (result.deletedCount ===0){
+      return next(new ApplicationError("No brands found for the provided IDs.",404));
+    }
+    res.status(200).json({
+      success: true,
+      message:`${result.deletedCount} brand(s) deleted successfully.`,
+    });
+  } catch (error) {
+    next(new ApplicationError((error as Error).message,500));
+  }
+};
