@@ -92,23 +92,43 @@ export const deleteBrand = async (req: Request, res: Response, next: NextFunctio
 };
 
 // deleteMultipleBrands
-export const deleteMultipleBrands = async (req: Request , res: Response , next: NextFunction) => {
+// deleteMultipleBrands
+export const deleteMultipleBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {ids} = req.body;
+    const { ids } = req.body; // Assuming an array of IDs is sent in the request body
 
-    if(!Array.isArray(ids) || ids.length ===0){
-      return next(new ApplicationError("Invalid IDs provided",400));
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return next(new ApplicationError("Invalid IDs provided.", 400));
     }
-    const result = await Brand.deleteMany({_id:{$in:ids}});
 
-    if (result.deletedCount ===0){
-      return next(new ApplicationError("No brands found for the provided IDs.",404));
+    const success = [];
+    const failed = [];
+
+    for (const id of ids) {
+      try {
+        const brand = await Brand.findByIdAndDelete(id);
+        if (brand) {
+          success.push({ id, message: "Deleted successfully" });
+        } else {
+          failed.push({ id, message: "Brand not found" });
+        }
+      } catch (err) {
+        failed.push({ id, message: "Invalid ID format or error during deletion" });
+      }
     }
+
     res.status(200).json({
       success: true,
-      message:`${result.deletedCount} brand(s) deleted successfully.`,
+      results: {
+        deleted: success.length,
+        failed: failed.length,
+        details: {
+          success,
+          failed,
+        },
+      },
     });
   } catch (error) {
-    next(new ApplicationError((error as Error).message,500));
+    next(new ApplicationError((error as Error).message, 500));
   }
 };
