@@ -16,6 +16,44 @@ export const createBrand = async (req: Request, res: Response, next: NextFunctio
     next(new ApplicationError((error as Error).message, 400));
   }
 };  
+
+// createMultipleBrands
+export const createMultipleBrands = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const brands = req.body; 
+    if (!Array.isArray(brands) || brands.length === 0) {
+      return next(new ApplicationError("Invalid or empty array of brands provided.", 400));
+    }
+
+    const success = [];
+    const failed = [];
+
+    for (const brand of brands) {
+      try {
+        const newBrand = await Brand.create(brand);
+        success.push({ id: newBrand._id, name: newBrand.name, message: "Created successfully" });
+      } catch (err) {
+        failed.push({ brand, message: (err as Error).message });
+      }
+    }
+
+    res.status(201).json({
+      success: true,
+      results: {
+        created: success.length,
+        failed: failed.length,
+        details: {
+          success,
+          failed,
+        },
+      },
+    });
+  } catch (error) {
+    next(new ApplicationError((error as Error).message, 500));
+  }
+};
+
+
 // getAllBrands
 export const getAllBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -74,6 +112,50 @@ export const updateBrand = async (req: Request, res: Response, next: NextFunctio
     next(new ApplicationError((error as Error).message, 400));
   }
 };  
+
+// updateMultipleBrands
+export const updateMultipleBrands = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const updates = req.body; 
+    if (!Array.isArray(updates) || updates.length === 0) {
+      return next(new ApplicationError("Invalid or empty array of updates provided.", 400));
+    }
+
+    const success = [];
+    const failed = [];
+
+    for (const { id, updateData } of updates) {
+      try {
+        const updatedBrand = await Brand.findByIdAndUpdate(id, updateData, {
+          new: true,
+          runValidators: true,
+        });
+        if (updatedBrand) {
+          success.push({ id, name: updatedBrand.name, message: "Updated successfully" });
+        } else {
+          failed.push({ id, message: "Brand not found" });
+        }
+      } catch (err) {
+        failed.push({ id, message: (err as Error).message });
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      results: {
+        updated: success.length,
+        failed: failed.length,
+        details: {
+          success,
+          failed,
+        },
+      },
+    });
+  } catch (error) {
+    next(new ApplicationError((error as Error).message, 500));
+  }
+};
+
 
 // deleteBrand
 export const deleteBrand = async (req: Request, res: Response, next: NextFunction) => {

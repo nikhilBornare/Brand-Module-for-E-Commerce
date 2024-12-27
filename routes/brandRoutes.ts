@@ -7,6 +7,7 @@ import {
   updateBrand,
   deleteBrand,
   deleteMultipleBrands,
+  createMultipleBrands,
 } from "../controllers/brandController";
 import { validateRequest, checkUniqueName } from "../middleware/validateRequest";
 
@@ -25,16 +26,26 @@ const validateObjectId = (req: express.Request, res: express.Response, next: exp
 };
 
 // Routes
+
+// createBrand
 router.post("/", checkUniqueName, validateRequest, createBrand); 
 
+// createMultipleBrands
+router.post("/bulk",validateRequest, createMultipleBrands);
+
+// getAllBrands
 router.get("/", getAllBrands);
 
+// getBrandById
 router.get("/:id", validateObjectId, getBrandById);
 
-router.put("/:id", validateObjectId, checkUniqueName, validateRequest, updateBrand); 
+// updateBrand
+router.put("/:id", validateObjectId, checkUniqueName, validateRequest, updateBrand);
 
+// deleteBrand
 router.delete("/:id", validateObjectId, deleteBrand);
 
+// deleteMultipleBrands
 router.delete("/",validateObjectId,deleteMultipleBrands);
 
 export default router;
