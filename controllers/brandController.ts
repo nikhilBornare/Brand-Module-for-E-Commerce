@@ -92,10 +92,9 @@ export const deleteBrand = async (req: Request, res: Response, next: NextFunctio
 };
 
 // deleteMultipleBrands
-// deleteMultipleBrands
 export const deleteMultipleBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { ids } = req.body; // Assuming an array of IDs is sent in the request body
+    const { ids } = req.body; 
 
     if (!Array.isArray(ids) || ids.length === 0) {
       return next(new ApplicationError("Invalid IDs provided.", 400));
