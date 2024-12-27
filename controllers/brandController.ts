@@ -15,7 +15,7 @@ export const createBrand = async (req: Request, res: Response, next: NextFunctio
   } catch (error: any) {
     next(new ApplicationError((error as Error).message, 400));
   }
-};
+};  
 // getAllBrands
 export const getAllBrands = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -97,7 +97,7 @@ export const deleteMultipleBrands = async (req: Request , res: Response , next: 
     const {ids} = req.body;
 
     if(!Array.isArray(ids) || ids.length ===0){
-      return next(new ApplicationError("Invalid or empty array of IDs provided",400));
+      return next(new ApplicationError("Invalid IDs provided",400));
     }
     const result = await Brand.deleteMany({_id:{$in:ids}});
 
