@@ -16,15 +16,15 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
     next();
 };
 
-// Middleware for checkUniqueName
+// Middleware for checking unique name
 export const checkUniqueName = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { name } = req.body;
-        const id = req.params?.id; 
+        const id = req.params?.id;
 
         const existingBrand = await Brand.findOne({
             name: name,
-            _id: { $ne: id }, 
+            _id: { $ne: id },
         });
 
         if (existingBrand) {

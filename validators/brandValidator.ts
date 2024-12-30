@@ -1,7 +1,7 @@
 import Joi from "joi";
 
-// Define validation schema
-export const brandSchema = Joi.object({
+// Define validation schema for a single brand
+const singleBrandSchema = Joi.object({
     name: Joi.string()
         .trim()
         .pattern(/^[A-Za-z0-9\s]*$/)
@@ -12,7 +12,7 @@ export const brandSchema = Joi.object({
         }),
 
     description: Joi.string().optional().messages({
-        "string.base": "Description must be a string",  
+        "string.base": "Description must be a string",
     }),
 
     website: Joi.string().uri().optional().messages({
@@ -66,3 +66,9 @@ export const brandSchema = Joi.object({
             "any.required": "Rating is required",
         }),
 });
+
+// Define validation schema for an array of brands
+export const brandSchema = Joi.alternatives().try(
+    singleBrandSchema,
+    Joi.array().items(singleBrandSchema)
+);

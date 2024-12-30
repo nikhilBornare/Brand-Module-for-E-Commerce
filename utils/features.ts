@@ -8,7 +8,7 @@ interface QueryFeatures {
     page?: number;
     limit?: number;
 }
-
+    
 
 
 const getFilteredSortedPaginatedBrands = async (queryFeatures: QueryFeatures) => {
